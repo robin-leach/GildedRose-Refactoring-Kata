@@ -25,10 +25,10 @@ namespace csharp
         {
             foreach(Item item in Items)
             {
+                if (item.Name == "Sulfuras, Hand of Ragnaros")
+                    continue;
                 switch (item.Name)
                 {
-                    case "Sulfuras, Hand of Ragnaros":
-                        break;
                     case "Aged Brie":
                         if (item.Quality < 50) item.Quality++;
                         if (item.Quality < 50 && item.SellIn <= 0) item.Quality++;
@@ -53,8 +53,7 @@ namespace csharp
                         item.SellIn--;
                         break;
                 }
-                if(item.Name!= "Sulfuras, Hand of Ragnaros")
-                    item.Quality = Math.Min(50, item.Quality);
+                item.Quality = Math.Min(50, item.Quality);
                 item.Quality = Math.Max(0, item.Quality);
             }
         }
