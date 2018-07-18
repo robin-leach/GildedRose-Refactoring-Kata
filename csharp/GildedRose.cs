@@ -40,16 +40,16 @@ namespace csharp
             return backstagePass;
         }
 
-        public Item UpdateNonSpecialItemsQuality(Item nonSpecialItem)
+        public Item UpdateNormalItemsQuality(Item normalItem)
         {
             int conjuredMultiplier = 1;
-            if (IsNameOfConjuredItem(nonSpecialItem.Name)) conjuredMultiplier = 2;
-            if (nonSpecialItem.Quality > 0)
+            if (IsNameOfConjuredItem(normalItem.Name)) conjuredMultiplier = 2;
+            if (normalItem.Quality > 0)
             {
-                if (nonSpecialItem.SellIn > 1) nonSpecialItem.Quality -= 1 * conjuredMultiplier;
-                else nonSpecialItem.Quality -= 2 * conjuredMultiplier;
+                if (normalItem.SellIn > 1) normalItem.Quality -= 1 * conjuredMultiplier;
+                else normalItem.Quality -= 2 * conjuredMultiplier;
             }
-            return nonSpecialItem;
+            return normalItem;
         }
 
         public Item keepQualityBetweenZeroAndFifty(Item item)
@@ -67,23 +67,18 @@ namespace csharp
                 {
                     case "Sulfuras, Hand of Ragnaros":
                         continue;
-
                     case "Aged Brie":
                         UpdateAgedBrieQuality(item);
                         break;
-
                     case "Backstage passes to a TAFKAL80ETC concert":
                         UpdateBackstagePassQuality(item);
                         break;
-
                     default:
-                        UpdateNonSpecialItemsQuality(item);
+                        UpdateNormalItemsQuality(item);
                         break;
                 }
-
                 keepQualityBetweenZeroAndFifty(item);
                 item.SellIn--;
-
             }
         }
     }
