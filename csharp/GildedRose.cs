@@ -13,21 +13,13 @@ namespace csharp
 
         public bool IsNameOfConjuredItem(string itemName)
         {
-            if (itemName.Length < 8)
-                return false;
-            string firstEightLetters = itemName.Substring(0,8);
-            if (firstEightLetters == "Conjured")
-                return true;
-            else return false;
+            return (itemName.Length >= 8 && itemName.Substring(0, 8) == "Conjured");
         }
 
         public Item UpdateAgedBrieQuality(Item agedBrie)
         {
-            if (agedBrie.Quality < 50)
-            {
-                agedBrie.Quality++;
-                if (agedBrie.SellIn <= 0) agedBrie.Quality++;
-            }
+            agedBrie.Quality++;
+            if (agedBrie.SellIn <= 0) agedBrie.Quality++;
             return agedBrie;
         }
 
@@ -40,19 +32,16 @@ namespace csharp
             return backstagePass;
         }
 
-        public Item UpdateNormalItemsQuality(Item normalItem)
+        public Item UpdateOtherItemsQuality(Item otherItem)
         {
             int conjuredMultiplier = 1;
-            if (IsNameOfConjuredItem(normalItem.Name)) conjuredMultiplier = 2;
-            if (normalItem.Quality > 0)
-            {
-                if (normalItem.SellIn > 1) normalItem.Quality -= 1 * conjuredMultiplier;
-                else normalItem.Quality -= 2 * conjuredMultiplier;
-            }
-            return normalItem;
+            if (IsNameOfConjuredItem(otherItem.Name)) conjuredMultiplier = 2;
+            if (otherItem.SellIn > 1) otherItem.Quality -= 1 * conjuredMultiplier;
+            else otherItem.Quality -= 2 * conjuredMultiplier;
+            return otherItem;
         }
 
-        public Item keepQualityBetweenZeroAndFifty(Item item)
+        public Item keepQualityBetweenMinAndMax(Item item)
         {
             item.Quality = Math.Min(50, item.Quality);
             item.Quality = Math.Max(0, item.Quality);
@@ -74,10 +63,10 @@ namespace csharp
                         UpdateBackstagePassQuality(item);
                         break;
                     default:
-                        UpdateNormalItemsQuality(item);
+                        UpdateOtherItemsQuality(item);
                         break;
                 }
-                keepQualityBetweenZeroAndFifty(item);
+                keepQualityBetweenMinAndMax(item);
                 item.SellIn--;
             }
         }
