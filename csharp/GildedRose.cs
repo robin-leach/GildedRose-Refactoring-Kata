@@ -25,32 +25,34 @@ namespace csharp
         {
             foreach(Item item in Items)
             {
-                if (item.Name == "Sulfuras, Hand of Ragnaros")
-                    continue;
                 switch (item.Name)
                 {
+                    case "Sulfuras, Hand of Ragnaros":
+                        continue;
+
                     case "Aged Brie":
+                        item.SellIn--;
                         if (item.Quality < 50) item.Quality++;
-                        if (item.Quality < 50 && item.SellIn <= 0) item.Quality++;
-                        item.SellIn--;
+                        if (item.Quality < 50 && item.SellIn < 0) item.Quality++;
                         break;
+
                     case "Backstage passes to a TAFKAL80ETC concert":
-                        if (item.SellIn > 10) item.Quality += 1;
-                        else if (item.SellIn > 5) item.Quality += 2;
-                        else if (item.SellIn > 0) item.Quality += 3;
-                        else item.Quality = 0;
                         item.SellIn--;
+                        if (item.SellIn >= 10) item.Quality += 1;
+                        else if (item.SellIn >= 5) item.Quality += 2;
+                        else if (item.SellIn >= 0) item.Quality += 3;
+                        else item.Quality = 0;
                         break;
+
                     default:
+                        item.SellIn--;
                         int conjuredMultiplier = 1;
-                        if (IsNameOfConjuredItem(item.Name))
-                            conjuredMultiplier = 2;
+                        if (IsNameOfConjuredItem(item.Name)) conjuredMultiplier = 2;
                         if (item.Quality > 0)
                         {
-                            if (item.SellIn > 1) item.Quality -= 1*conjuredMultiplier;
+                            if (item.SellIn >= 1) item.Quality -= 1*conjuredMultiplier;
                             else item.Quality -= 2*conjuredMultiplier;
                         }
-                        item.SellIn--;
                         break;
                 }
                 item.Quality = Math.Min(50, item.Quality);
