@@ -82,5 +82,22 @@ namespace csharp
             Assert.AreEqual(Items[2].Quality, 13);
             Assert.AreEqual(Items[3].Quality, 0);
         }
+
+        [Test]
+        public void ConjuredItemsDegradeInQualityTwiceAsFast()
+        {
+            IList<Item> Items = new List<Item> {
+                new Item { Name = "Conjured bracelet", SellIn = 10, Quality = 20 },
+                new Item { Name = "Conjured apple", SellIn = 10, Quality = 20 },
+                new Item { Name = "Regular bracelet", SellIn = 10, Quality = 20 },
+                new Item { Name = "Regular apple", SellIn = 10, Quality = 20 }
+            };
+            GildedRose app = new GildedRose(Items);
+            app.UpdateQuality();
+            Assert.AreEqual(Items[0].Quality, 18);
+            Assert.AreEqual(Items[1].Quality, 18);
+            Assert.AreEqual(Items[2].Quality, 19);
+            Assert.AreEqual(Items[3].Quality, 19);
+        }
     }
 }
