@@ -21,6 +21,44 @@ namespace csharp
             else return false;
         }
 
+        public Item UpdateAgedBrieQuality(Item agedBrie)
+        {
+            if (agedBrie.Quality < 50)
+            {
+                agedBrie.Quality++;
+                if (agedBrie.SellIn <= 0) agedBrie.Quality++;
+            }
+            return agedBrie;
+        }
+
+        public Item UpdateBackstagePassQuality(Item backstagePass)
+        {
+            if (backstagePass.SellIn > 10) backstagePass.Quality += 1;
+            else if (backstagePass.SellIn > 5) backstagePass.Quality += 2;
+            else if (backstagePass.SellIn > 0) backstagePass.Quality += 3;
+            else backstagePass.Quality = 0;
+            return backstagePass;
+        }
+
+        public Item UpdateNonSpecialItemsQuality(Item nonSpecialItem)
+        {
+            int conjuredMultiplier = 1;
+            if (IsNameOfConjuredItem(nonSpecialItem.Name)) conjuredMultiplier = 2;
+            if (nonSpecialItem.Quality > 0)
+            {
+                if (nonSpecialItem.SellIn > 1) nonSpecialItem.Quality -= 1 * conjuredMultiplier;
+                else nonSpecialItem.Quality -= 2 * conjuredMultiplier;
+            }
+            return nonSpecialItem;
+        }
+
+        public Item keepQualityBetweenZeroAndFifty(Item item)
+        {
+            item.Quality = Math.Min(50, item.Quality);
+            item.Quality = Math.Max(0, item.Quality);
+            return item;
+        }
+
         public void UpdateQuality()
         {
             foreach(Item item in Items)
@@ -31,32 +69,21 @@ namespace csharp
                         continue;
 
                     case "Aged Brie":
-                        item.SellIn--;
-                        if (item.Quality < 50) item.Quality++;
-                        if (item.Quality < 50 && item.SellIn < 0) item.Quality++;
+                        UpdateAgedBrieQuality(item);
                         break;
 
                     case "Backstage passes to a TAFKAL80ETC concert":
-                        item.SellIn--;
-                        if (item.SellIn >= 10) item.Quality += 1;
-                        else if (item.SellIn >= 5) item.Quality += 2;
-                        else if (item.SellIn >= 0) item.Quality += 3;
-                        else item.Quality = 0;
+                        UpdateBackstagePassQuality(item);
                         break;
 
                     default:
-                        item.SellIn--;
-                        int conjuredMultiplier = 1;
-                        if (IsNameOfConjuredItem(item.Name)) conjuredMultiplier = 2;
-                        if (item.Quality > 0)
-                        {
-                            if (item.SellIn >= 1) item.Quality -= 1*conjuredMultiplier;
-                            else item.Quality -= 2*conjuredMultiplier;
-                        }
+                        UpdateNonSpecialItemsQuality(item);
                         break;
                 }
-                item.Quality = Math.Min(50, item.Quality);
-                item.Quality = Math.Max(0, item.Quality);
+
+                keepQualityBetweenZeroAndFifty(item);
+                item.SellIn--;
+
             }
         }
     }
